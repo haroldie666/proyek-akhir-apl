@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "D:/laragon/bin/mysql/mysql-8.0.30-winx64/include"
+                "C:/laragon/bin/mysql/mysql-8.0.30-winx64/include"
             ],
             "defines": [
                 "_DEBUG",

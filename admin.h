@@ -67,8 +67,7 @@ inline void createData(MYSQL* conn) {
             tabelKategori.add_row({"3", "Makanan utama"});
             tabelKategori.add_row({"4", "Buah"});
             tabelKategori.add_row({"5", "Appetizer"});
-
-            tabelKategori[0].format().font_align(FontAlign::center);
+            tabelKategori[0].format().font_align(FontAlign::center);           
             for (size_t i = 1; i <= 5; ++i) {
                 tabelKategori[i][0].format().font_align(FontAlign::center);
             }
@@ -128,8 +127,8 @@ inline void createData(MYSQL* conn) {
     lemak = inputFloat("Jumlah Lemak (g) : ");
 
     string query = "INSERT INTO makanan (nama_makanan, kategori, kalori, protein, karbohidrat, lemak) VALUES ('" + 
-                   nama + "', '" + kategori + "', " + formatFloat(kalori) + ", " + formatFloat(protein) + ", " + 
-                   formatFloat(karbohidrat) + ", " + formatFloat(lemak) + ")";
+                nama + "', '" + kategori + "', " + formatFloat(kalori) + ", " + formatFloat(protein) + ", " + 
+                formatFloat(karbohidrat) + ", " + formatFloat(lemak) + ")";
 
     if (mysql_query(conn, query.c_str())) cout << "Gagal menyimpan data: " << mysql_error(conn) << endl;
     else 
@@ -141,8 +140,7 @@ inline void createData(MYSQL* conn) {
 
 inline void editData(MYSQL* conn) {
     readData(conn);
-    string targetId; 
-
+    string targetId;
     while (true) {
         try {
             cout << "ps : Jika tidak ingin mengubah data makanan tertentu, cukup tekan enter";
@@ -318,11 +316,17 @@ inline void konfirmasiRequest(MYSQL* conn) {
 
     Table tbl; 
     tbl.add_row({"ID Request", "ID User", "Username", "Nama Makanan", "Status"});
-    for (size_t i = 0; i < 5; ++i) tbl[0][i].format().font_align(FontAlign::center);
+    for (size_t i = 0; i < 5; ++i) tbl[0][i].format().font_align(FontAlign::center).font_style({FontStyle::bold});
 
     MYSQL_ROW row;
     while ((row = mysql_fetch_row(res))) {
         tbl.add_row({row[0], row[1], row[2], row[3], row[4]});
+    }
+    
+    for (size_t i = 1; i <= mysql_num_rows(res); ++i) {
+        tbl[i][0].format().font_align(FontAlign::center);
+        tbl[i][1].format().font_align(FontAlign::center);
+        tbl[i][4].format().font_align(FontAlign::center);
     }
     cout << tbl << "\n"; 
     mysql_free_result(res);
@@ -334,8 +338,7 @@ inline void konfirmasiRequest(MYSQL* conn) {
             cout << "Masukkan ID Request (0 = batal): "; 
             getline(cin, idReq);
             
-            if (idReq == "0") 
-            return; 
+            if (idReq == "0") return; 
             if (idReq.empty()) throw invalid_argument("ID Request tidak boleh kosong!");
 
             if (idReq.find_first_not_of("0123456789") != string::npos) {
@@ -357,7 +360,7 @@ inline void konfirmasiRequest(MYSQL* conn) {
             break; 
             
         } catch (const invalid_argument& e) {
-            cout << "[ERROR] " << e.what() << "\nSilakan coba lagi.\n\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\nSilakan coba lagi.\n\n";
         }
     }
 
@@ -372,7 +375,7 @@ inline void konfirmasiRequest(MYSQL* conn) {
                 throw invalid_argument("Pilihan tidak valid, Masukkan angka 1 atau 2.");
             }
         } catch (const invalid_argument& e) {
-            cout << "[ERROR] " << e.what() << "\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
         }
     }
 
@@ -391,7 +394,8 @@ inline void konfirmasiRequest(MYSQL* conn) {
                 tabelKategori.add_row({"3", "Makanan utama"});
                 tabelKategori.add_row({"4", "Buah"});
                 tabelKategori.add_row({"5", "Appetizer"});
-                tabelKategori[0].format().font_align(FontAlign::center);
+                
+                tabelKategori[0].format().font_align(FontAlign::center).font_style({FontStyle::bold});
                 for (size_t i = 1; i <= 5; ++i) tabelKategori[i][0].format().font_align(FontAlign::center);
                 
                 cout << tabelKategori << endl;
@@ -399,19 +403,14 @@ inline void konfirmasiRequest(MYSQL* conn) {
                 string pilKat;
                 getline(cin, pilKat);
                 
-                if (pilKat == "1") { kategori = "Lauk pauk"; 
-                    break; }
-                else if (pilKat == "2") { kategori = "Cemilan"; 
-                    break; }
-                else if (pilKat == "3") { kategori = "Makanan utama"; 
-                    break; }
-                else if (pilKat == "4") { kategori = "Buah"; 
-                    break; }
-                else if (pilKat == "5") { kategori = "Appetizer"; 
-                    break; }
-                else throw invalid_argument("Pilihan kategori tidak valid Harus angka 1-5.");
+                if (pilKat == "1") { kategori = "Lauk pauk"; break; }
+                else if (pilKat == "2") { kategori = "Cemilan"; break; }
+                else if (pilKat == "3") { kategori = "Makanan utama"; break; }
+                else if (pilKat == "4") { kategori = "Buah"; break; }
+                else if (pilKat == "5") { kategori = "Appetizer"; break; }
+                else throw invalid_argument("Pilihan kategori tidak valid. Harus angka 1-5.");
             } catch (const invalid_argument& e) {
-                cout << "[ERROR] " << e.what() << "\n";
+                cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
             }
         }
 
@@ -421,11 +420,12 @@ inline void konfirmasiRequest(MYSQL* conn) {
                 try {
                     cout << prompt; getline(cin, inputStr);
                     if (inputStr.empty()) throw invalid_argument("Input tidak boleh kosong!");
-                    size_t pos; float val = stof(inputStr, &pos); 
+                    size_t pos; 
+                    float val = stof(inputStr, &pos); 
                     if (pos != inputStr.length()) throw invalid_argument("Input harus berupa angka murni!");
                     return val; 
                 } catch (...) {
-                    cout << "[ERROR] Input tidak valid! Harus berupa angka.\n";
+                    cout << "\033[1;31m[ERROR] Input tidak valid! Harus berupa angka.\033[0m\n";
                 }
             }
         };
@@ -440,10 +440,10 @@ inline void konfirmasiRequest(MYSQL* conn) {
                          formatFloat(protein) + ", " + formatFloat(karbohidrat) + ", " + formatFloat(lemak) + ")";
         
         if (mysql_query(conn, qInsert.c_str())) {
-            cout << "\nGagal menyimpan ke katalog makanan: " << mysql_error(conn) << "\n";
+            cout << "\033[1;31m\nGagal menyimpan ke katalog makanan: \033[0m" << mysql_error(conn) << "\n";
             return; 
         } else {
-            cout << "\n[BERHASIL] '" << namaMakananReq << "' telah ditambahkan ke katalog gizi.\n";
+            cout << "\n\033[1;32m[BERHASIL] '" << namaMakananReq << "' telah ditambahkan ke katalog gizi.\033[0m\n";
         }
     }
 
@@ -451,7 +451,7 @@ inline void konfirmasiRequest(MYSQL* conn) {
     string qUpdate = "UPDATE request_user SET status_request = '" + stat + "' WHERE id_request = " + idReq;
     
     if (mysql_query(conn, qUpdate.c_str())) {
-        cout << "Gagal memperbarui status request: " << mysql_error(conn) << endl;
+        cout << "\033[1;31mGagal memperbarui status request: \033[0m" << mysql_error(conn) << endl;
     } else {
         cout << "Status Request berhasil diubah menjadi: " << stat << ".\n";
         catatLog(conn, currentUserId, "Melakukan konfirmasi request ID " + idReq + " menjadi " + stat);

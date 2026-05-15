@@ -7,7 +7,7 @@
 #include <mysql.h>
 #include <cmath>
 #include "tabulate/table.hpp"
-#include "helper.h" // Memanggil helper.h
+#include "helper.h"
 
 using namespace std;
 using namespace tabulate;

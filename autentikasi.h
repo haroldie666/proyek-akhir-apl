@@ -77,7 +77,6 @@ void registerUser(MYSQL* conn) {
     } else {
         cout << "\n\033[34mRegistrasi berhasil, akun Anda sudah terdaftar sebagai user. Silakan login untuk melanjutkan\033[0m" << endl;
     }
-    
     cout << "\033[1;32mTekan enter untuk kembali...\033[0m";
     cin.get();
 }
@@ -103,7 +102,6 @@ bool login(MYSQL* conn, int percobaan) {
         currentUserId = atoi(row[0]);
         user = usn;
         isTerdaftar = true;
-
         userRole = row[3] ? row[3] : "user"; 
 
         cout << "\n\033[34mLogin berhasil, selamat datang di Sistem Gizi \033[0m" << user << endl;
@@ -119,7 +117,6 @@ bool login(MYSQL* conn, int percobaan) {
         cout << "Anda akan otomatis dialihkan ke form Registrasi." << endl;
         cout << "\033[1;32mTekan enter untuk melanjutkan...\033[0m";
         cin.get();
-
         registerUser(conn);
 
         return false;
