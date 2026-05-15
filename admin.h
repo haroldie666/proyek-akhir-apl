@@ -141,10 +141,12 @@ inline void createData(MYSQL* conn) {
 inline void editData(MYSQL* conn) {
     readData(conn);
     string targetId;
+    string oldNama, oldKategori, oldKalori, oldProtein, oldKarbo, oldLemak;
+
     while (true) {
         try {
-            cout << "ps : Jika tidak ingin mengubah data makanan tertentu, cukup tekan enter";
-            cout << "\nMasukkan ID Makanan yang akan diedit (ketik 0 untuk batal): "; 
+            cout << "\033[33mNote : Jika tidak ingin mengubah data makanan tertentu, cukup tekan enter\033[0m\n";
+            cout << "\n\nMasukkan ID Makanan yang akan diedit (ketik 0 untuk batal): "; 
             getline(cin, targetId);
             
             if (targetId == "0") 
@@ -161,8 +163,16 @@ inline void editData(MYSQL* conn) {
             
             if (mysql_num_rows(res) == 0) { 
                 mysql_free_result(res); 
-                throw invalid_argument("Data dengan ID tersebut tidak ditemukan!");
+                throw invalid_argument("Data dengan ID tersebut tidak ditemukan");
             }
+
+            MYSQL_ROW row = mysql_fetch_row(res);
+            oldNama = row[1] ? row[1] : "";
+            oldKategori = row[2] ? row[2] : "";
+            oldKalori = row[3] ? row[3] : "";
+            oldProtein = row[4] ? row[4] : "";
+            oldKarbo = row[5] ? row[5] : "";
+            oldLemak = row[6] ? row[6] : "";
             
             mysql_free_result(res);
             break; 
@@ -173,12 +183,10 @@ inline void editData(MYSQL* conn) {
             cout << "[ERROR] Terjadi kesalahan saat membaca ID.\n";
         }
     }
-
-    string namaBaru, kategoriBaru, kaloriBaru, proteinBaru, karboBaru, lemakBaru; 
     
     while (true) {
         try {
-            cout << "\nNama makanan : "; 
+            cout << "\nNama makanan [" << oldNama << "] : ";
             getline(cin, namaBaru);
             if (!namaBaru.empty() && namaBaru.find_first_of("0123456789") != string::npos) {
                 throw invalid_argument("Nama makanan tidak boleh mengandung angka");
@@ -191,7 +199,7 @@ inline void editData(MYSQL* conn) {
 
     while (true) {
         try {
-            cout << "\nUbah Kategori Makanan:\n";
+            cout << "\nUbah Kategori Makanan [" << oldKategori << "]:\n";
             
             Table tabelKategori;
             tabelKategori.add_row({"No", "Kategori Makanan"});
@@ -233,10 +241,11 @@ inline void editData(MYSQL* conn) {
         }
     }
 
-    auto editFloatOpsional = [](const string& prompt, string& varRef) {
+    auto editFloatOpsional = [](const string& prompt, const string& oldVal, string& varRef) {
         while (true) {
             try {
                 cout << prompt;
+                cout << prompt << " [" << oldVal << "] : ";
                 getline(cin, varRef);
                 
                 if (varRef.empty()) break; 
@@ -254,10 +263,10 @@ inline void editData(MYSQL* conn) {
     };
 
     cout << endl;
-    editFloatOpsional("Kalori baru : ", kaloriBaru);
-    editFloatOpsional("Protein baru (g) : ", proteinBaru);
-    editFloatOpsional("Karbohidrat baru (g) : ", karboBaru);
-    editFloatOpsional("Lemak baru (g) : ", lemakBaru);
+    editFloatOpsional("Kalori baru", oldKalori, kaloriBaru);
+    editFloatOpsional("Protein baru (g)", oldProtein, proteinBaru);
+    editFloatOpsional("Karbohidrat baru (g)", oldKarbo, karboBaru);
+    editFloatOpsional("Lemak baru (g)", oldLemak, lemakBaru);
 
     string updateQuery = "UPDATE makanan SET "; bool isUpdate = false;
     if (!namaBaru.empty()) { updateQuery += "nama_makanan = '" + namaBaru + "'"; isUpdate = true; }
