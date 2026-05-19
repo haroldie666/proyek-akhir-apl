@@ -48,7 +48,7 @@ inline void createData(MYSQL* conn) {
             if (nama.empty()) throw invalid_argument("Nama makanan tidak boleh kosong");
             
             if (nama.find_first_of("0123456789") != string::npos) {
-                throw invalid_argument("Nama makanan tidak boleh mengandung angka!");
+                throw invalid_argument("Nama makanan tidak boleh mengandung angka");
             }
             break; 
         } catch (const invalid_argument& e) {
@@ -152,7 +152,7 @@ inline void editData(MYSQL* conn) {
             
             if (targetId == "0") 
             return; 
-            if (targetId.empty()) throw invalid_argument("ID Makanan tidak boleh kosong!");
+            if (targetId.empty()) throw invalid_argument("ID Makanan tidak boleh kosong");
 
             if (targetId.find_first_not_of("0123456789") != string::npos) {
                 throw invalid_argument("ID Makanan tidak valid. Harus berupa angka murni");
@@ -235,7 +235,7 @@ inline void editData(MYSQL* conn) {
             else if (pilKat == "5") { kategoriBaru = "Appetizer"; 
                 break; }
             else {
-                throw invalid_argument("Pilihan kategori tidak valid! Masukkan angka 1-5 atau kosongkan.");
+                throw invalid_argument("Pilihan kategori tidak valid, silakan masukkan angka saja");
             }
         } catch (const invalid_argument& e) {
             cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
@@ -253,11 +253,11 @@ inline void editData(MYSQL* conn) {
                 size_t pos;
                 stof(varRef, &pos); 
                 
-                if (pos != varRef.length()) throw invalid_argument("Input harus angka murni!");
+                if (pos != varRef.length()) throw invalid_argument("Input harus angka murni");
                 break; 
                 
             } catch (...) {
-                cout << "\033[1;31m[ERROR] Input harus berupa angka! Silakan isi kembali.\033[0m\n";
+                cout << "\033[1;31m[ERROR] Input harus berupa angka, silakan isi kembali\033[0m\n";
             }
         }
     };
@@ -432,13 +432,13 @@ inline void konfirmasiRequest(MYSQL* conn) {
             while(true) {
                 try {
                     cout << prompt; getline(cin, inputStr);
-                    if (inputStr.empty()) throw invalid_argument("Input tidak boleh kosong!");
+                    if (inputStr.empty()) throw invalid_argument("Input tidak boleh kosong");
                     size_t pos; 
                     float val = stof(inputStr, &pos); 
-                    if (pos != inputStr.length()) throw invalid_argument("Input harus berupa angka murni!");
+                    if (pos != inputStr.length()) throw invalid_argument("Input harus berupa angka murni");
                     return val; 
                 } catch (...) {
-                    cout << "\033[1;31m[ERROR] Input tidak valid! Harus berupa angka.\033[0m\n";
+                    cout << "\033[1;31m[ERROR] Input tidak valid, harus berupa angka\033[0m\n";
                 }
             }
         };
@@ -537,10 +537,10 @@ inline void menuSortingAdmin(MYSQL* conn) {
             cout << "Pilih opsi: ";
             getline(cin, pilihan);
 
-            if (pilihan.empty()) throw invalid_argument("Input tidak boleh kosong!");
-            if (pilihan.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka!");
+            if (pilihan.empty()) throw invalid_argument("Input tidak boleh kosong");
+            if (pilihan.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka");
             if (pilihan != "0" && pilihan != "1" && pilihan != "2" && pilihan != "3") {
-                throw invalid_argument("Pilihan tidak valid! Silakan masukkan angka 0 - 3.");
+                throw invalid_argument("Pilihan tidak valid, silakan masukkan angka saja");
             }
 
             if (pilihan == "0") {
@@ -619,10 +619,10 @@ inline void searchingMenu(MYSQL* conn) {
             cout << "Pilih opsi: ";
             getline(cin, sub);
 
-            if (sub.empty()) throw invalid_argument("Input tidak boleh kosong!");
-            if (sub.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka!");
+            if (sub.empty()) throw invalid_argument("Input tidak boleh kosong");
+            if (sub.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka");
             if (sub != "0" && sub != "1" && sub != "2" && sub != "3") {
-                throw invalid_argument("Pilihan tidak valid! Silakan masukkan angka 0 - 3.");
+                throw invalid_argument("Pilihan tidak valid, silakan masukkan angka 0 - 3.");
             }
 
             if (sub == "0") {
@@ -648,7 +648,7 @@ inline void searchingMenu(MYSQL* conn) {
                         DataMakanan hasil[1] = {arr[index]};
                         tabelMakanan(hasil, 1);
                     } else { 
-                        cout << "\nBahan '" << cari << "' tidak ditemukan.\n"; 
+                        cout << "\nBahan '" << cari << "' tidak ditemukan\n"; 
                     }
                 }
                 cout << "\n\033[1;32mTekan enter untuk kembali ke menu searching...\033[0m";
@@ -690,8 +690,7 @@ inline void searchingMenu(MYSQL* conn) {
                         } else { 
                             cout << "\nAkun dengan nama '" << cari << "' tidak ditemukan.\n"; 
                         }
-                        
-                        // Selalu bebaskan memori setelah selesai digunakan
+
                         mysql_free_result(res);
                     } else {
                         cout << "\033[1;31m[ERROR] Gagal mengambil hasil data dari database.\033[0m\n";
@@ -768,8 +767,8 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
             cout << "Pilih menu: ";
             getline(cin, pil);
 
-            if (pil.empty()) throw invalid_argument("Input tidak boleh kosong!");
-            if (pil.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka!");
+            if (pil.empty()) throw invalid_argument("Input tidak boleh kosong");
+            if (pil.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka");
 
             if (pil == "0") break;
 
@@ -805,9 +804,9 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         cout << "\nKategori BMI (Contoh: Underweight, Obesitas): ";
                         getline(cin, kategori);
                         
-                        if (kategori.empty()) throw invalid_argument("Kategori tidak boleh kosong!");
+                        if (kategori.empty()) throw invalid_argument("Kategori tidak boleh kosong");
                         if (kategori.find_first_of("0123456789") != string::npos) {
-                            throw invalid_argument("Kategori tidak boleh mengandung angka!");
+                            throw invalid_argument("Kategori tidak boleh mengandung angka");
                         }
                         break; 
                     } catch (const invalid_argument& e) {
@@ -820,7 +819,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         cout << "Masukkan Saran Diet: ";
                         getline(cin, saran);
                         
-                        if (saran.empty()) throw invalid_argument("Saran diet tidak boleh kosong!");
+                        if (saran.empty()) throw invalid_argument("Saran diet tidak boleh kosong");
                         break;
                     } catch (const invalid_argument& e) {
                         cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
@@ -856,15 +855,15 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         getline(cin, id);
                         
                         if (id == "0") break;
-                        if (id.empty()) throw invalid_argument("ID tidak boleh kosong!");
-                        if (id.find_first_not_of("0123456789") != string::npos) throw invalid_argument("ID harus berupa angka!");
+                        if (id.empty()) throw invalid_argument("ID tidak boleh kosong");
+                        if (id.find_first_not_of("0123456789") != string::npos) throw invalid_argument("ID harus berupa angka");
                         
                         string cekQ = "SELECT id_rekomendasi FROM manajemen_rekomendasi WHERE id_rekomendasi = " + id;
                         mysql_query(conn, cekQ.c_str());
                         MYSQL_RES* cekRes = mysql_store_result(conn);
                         if (mysql_num_rows(cekRes) == 0) {
                             mysql_free_result(cekRes);
-                            throw invalid_argument("ID tidak ditemukan!");
+                            throw invalid_argument("ID tidak ditemukan");
                         }
                         mysql_free_result(cekRes);
                         break;
@@ -884,7 +883,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         getline(cin, kategoriBaru);
 
                         if (!kategoriBaru.empty() && kategoriBaru.find_first_of("0123456789") != string::npos) {
-                            throw invalid_argument("Kategori tidak boleh mengandung angka!");
+                            throw invalid_argument("Kategori tidak boleh mengandung angka");
                         }
                         break;
                     } catch (const invalid_argument& e) {
@@ -943,16 +942,17 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         cout << "Masukkan ID Rekomendasi yang akan dihapus (0 = batal): ";
                         getline(cin, id);
                         
-                        if (id == "0") break;
-                        if (id.empty()) throw invalid_argument("ID tidak boleh kosong!");
-                        if (id.find_first_not_of("0123456789") != string::npos) throw invalid_argument("ID harus berupa angka!");
+                        if (id == "0") 
+                        break;
+                        if (id.empty()) throw invalid_argument("ID tidak boleh kosong");
+                        if (id.find_first_not_of("0123456789") != string::npos) throw invalid_argument("ID harus berupa angka");
                         
                         string cekQ = "SELECT id_rekomendasi FROM manajemen_rekomendasi WHERE id_rekomendasi = " + id;
                         mysql_query(conn, cekQ.c_str());
                         MYSQL_RES* cekRes = mysql_store_result(conn);
                         if (mysql_num_rows(cekRes) == 0) {
                             mysql_free_result(cekRes);
-                            throw invalid_argument("ID tidak ditemukan!");
+                            throw invalid_argument("ID tidak ditemukan");
                         }
                         mysql_free_result(cekRes);
                         break;
@@ -1006,14 +1006,12 @@ inline void menuAdmin(MYSQL* conn) {
         cout << "Silakan pilih menu admin: ";
         getline(cin, pilihan);
 
-        // --- REVISI ERROR HANDLING INPUT KOSONG ---
         if(pilihan.empty()) {
-            cout << "\n\033[1;31m[ERROR] Input tidak boleh kosong!\033[0m\n";
+            cout << "\n\033[1;31m[ERROR] Input tidak boleh kosong\033[0m\n";
             cout << "Silakan tekan enter untuk memilih kembali...";
             cin.get();
             continue; 
         }
-        // ------------------------------------------
 
         if (pilihan == "1") { 
             readData(conn); 

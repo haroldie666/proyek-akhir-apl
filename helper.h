@@ -12,7 +12,7 @@
 using namespace std;
 using namespace tabulate;
 
-struct DataMakanan {
+struct DataMakanan { // Menggunakan struct untuk menyimpan data makanan yang diambil dari database
     int id;
     string nama;
     string kategori;

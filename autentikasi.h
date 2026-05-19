@@ -18,7 +18,7 @@ void header(string judul) {
     cout << "\n====== " << judul << " ======\n" << endl;
 }
 
-string inputPassword(string pesan) {
+string inputPassword(string pesan) { // Fungsi untuk masking password agar tidak terlihat saat diketik
     string pass = "";
     char ch;
     cout << pesan;

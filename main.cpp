@@ -11,7 +11,7 @@
 using namespace std;
 using namespace tabulate;
 
-void enableANSI() {
+void enableANSI() { // Fungsi untuk mengaktifkan dukungan ANSI escape codes di Windows untuk warna teks
     #ifdef _WIN32
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;

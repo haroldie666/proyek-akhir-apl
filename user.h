@@ -59,7 +59,7 @@ inline void reqGiziMakanan(MYSQL* conn) {
     getline(cin, namaReq);
 
     if (namaReq.empty()) {
-        cout << "Nama makanan tidak boleh kosong!\n";
+        cout << "Nama makanan tidak boleh kosong\n";
         return;
     }
 
@@ -83,7 +83,7 @@ inline void kalkulatorKalori() {
     try {
         char gender; float berat, tinggi; int umur;
         cout << "Pilih Jenis Kelamin (L/P): "; cin >> gender;
-        if (toupper(gender) != 'L' && toupper(gender) != 'P') throw runtime_error("Jenis kelamin tidak valid!");
+        if (toupper(gender) != 'L' && toupper(gender) != 'P') throw runtime_error("Jenis kelamin tidak valid");
 
         cout << "Masukkan Berat Badan (kg) : "; cin >> berat;
         cout << "Masukkan Tinggi Badan (cm): "; cin >> tinggi;
@@ -91,7 +91,7 @@ inline void kalkulatorKalori() {
 
         if (cin.fail() || berat <= 0 || tinggi <= 0 || umur <= 0) {
             cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            throw runtime_error("Input harus berupa angka positif!");
+            throw runtime_error("Input harus berupa angka positif");
         }
 
         float bmr = (toupper(gender) == 'L') 
@@ -116,7 +116,7 @@ inline void kalkulatorBMI() {
 
         if (cin.fail() || berat <= 0 || tinggiCm <= 0) {
             cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            throw runtime_error("Input harus berupa angka positif!");
+            throw runtime_error("Input harus berupa angka positif");
         }
 
         float tinggiM = tinggiCm / 100.0;
@@ -244,7 +244,7 @@ inline void menuSorting(MYSQL* conn) {
                 tabelMakananUser(arr, n);
             } 
             else {
-                throw invalid_argument("Pilihan tidak valid!");
+                throw invalid_argument("Pilihan tidak valid");
             }
 
             cout << "\n\033[1;32mTekan enter untuk kembali ke menu sorting...\033[0m";
@@ -358,14 +358,12 @@ inline void menuUser(MYSQL* conn) {
         
         getline(cin, pilihan);
 
-        // --- PERUBAHAN LOGIKA ERROR HANDLING DI SINI ---
         if (pilihan.empty()) {
-            cout << "\n\033[1;31m[ERROR] Input tidak boleh kosong!\033[0m\n";
+            cout << "\n\033[1;31m[ERROR] Input tidak boleh kosong\033[0m\n";
             cout << "Silakan tekan enter untuk memilih kembali...";
             cin.get();
             continue; 
         }
-        // -----------------------------------------------
 
         if (pilihan == "1") { 
             readKatalogGizi(conn); 
@@ -401,7 +399,7 @@ inline void menuUser(MYSQL* conn) {
             cin.get(); 
             break;
         } else {
-            cout << "\n\033[1;33m[PERINGATAN] Pilihan '" << pilihan << "' tidak valid!\033[0m\n"; 
+            cout << "\n\033[1;33m[PERINGATAN] Pilihan '" << pilihan << "' tidak valid\033[0m\n"; 
             cout << "Silakan tekan enter untuk mencoba lagi...";
             cin.get(); 
         }
