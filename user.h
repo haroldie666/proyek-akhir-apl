@@ -135,20 +135,51 @@ inline void kalkulatorBMI() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+inline void tabelMakananUser(DataMakanan arr[], int n) {
+    if (n == 0) {
+        cout << "Tidak ada data makanan\n";
+        return;
+    }
+    
+    Table tbl;
+    tbl.add_row({"No", "Nama Makanan", "Kategori", "Kalori (kcal)", "Protein (g)", "Karbo (g)", "Lemak (g)"});
+    tbl.row(0).format().font_align(FontAlign::center).font_style({FontStyle::bold}).font_color(Color::yellow);
+
+    int no = 1; 
+    for (int i = 0; i < n; i++) {
+        tbl.add_row({
+            to_string(no++), 
+            arr[i].nama, 
+            arr[i].kategori,
+            formatFloat(arr[i].kalori), 
+            formatFloat(arr[i].protein),
+            formatFloat(arr[i].karbohidrat), 
+            formatFloat(arr[i].lemak)
+        });
+    }
+
+    for (size_t i = 1; i <= (size_t)n; ++i) {
+        for(size_t j = 0; j < 7; ++j) {
+            if(j != 1 && j != 2) tbl[i][j].format().font_align(FontAlign::center);
+        }
+    }
+    cout << tbl << endl;
+}
+
 inline void menuSorting(MYSQL* conn) {
     string pilihan;
     while (true) {
         system("cls");
-        cout << "\n====== SORTING MAKANAN (QUICK SORT) ======\n\n";
+        cout << "\n====== MENU SORTING ======\n\n";
         
         DataMakanan arr[100];
         int n = fetchMakananToArray(conn, arr, 100);
 
         Table menuTbl;
-        menuTbl.add_row({"No", "Kriteria Pengurutan"});
-        menuTbl.add_row({"1", "Berdasarkan Jenis/Kategori (A-Z)"});
-        menuTbl.add_row({"2", "Berdasarkan Kalori Tertinggi-Terendah"});
-        menuTbl.add_row({"3", "Berdasarkan Makronutrisi Tertinggi-Terendah"});
+        menuTbl.add_row({"No", "Menu Sorting"});
+        menuTbl.add_row({"1", "Sorting Berdasarkan Kategori (A-Z)"});
+        menuTbl.add_row({"2", "Sorting Berdasarkan Kalori Tertinggi-Terendah"});
+        menuTbl.add_row({"3", "Sorting Berdasarkan Makronutrisi Tertinggi-Terendah"});
         menuTbl.add_row({"0", "Kembali ke Menu Sebelumnya"});
 
         menuTbl[0].format().font_align(FontAlign::center).font_style({FontStyle::bold});
@@ -165,36 +196,64 @@ inline void menuSorting(MYSQL* conn) {
 
             if (pilihan == "1") {
                 quickSortKategori(arr, 0, n - 1);
-                cout << "\n\033[1;32m>> Hasil Sorting Berdasarkan Jenis/Kategori:\033[0m\n";
-                tabelMakanan(arr, n);
-            } else if (pilihan == "2") {
+                system("cls");
+                cout << "\nHasil Sorting Berdasarkan Kategori\n";
+                tabelMakananUser(arr, n); 
+            } 
+            else if (pilihan == "2") {
                 quickSortKalori(arr, 0, n - 1);
-                cout << "\n\033[1;32m>> Hasil Sorting Berdasarkan Kalori Tertinggi:\033[0m\n";
-                tabelMakanan(arr, n);
-            } else if (pilihan == "3") {
-                cout << "\n   Pilih Makronutrisi:\n   a. Protein\n   b. Karbohidrat\n   c. Lemak\n   Pilihan: ";
+                system("cls");
+                cout << "\nHasil Sorting Berdasarkan Kalori Tertinggi\n";
+                tabelMakananUser(arr, n);
+            } 
+            else if (pilihan == "3") {
+                system("cls");
+                cout << "\n====== MAKRONUTRISI ======\n\n";
+
+                Table tblMakro;
+                tblMakro.add_row({"Opsi", "Makronutrisi"});
+                tblMakro.add_row({"1", "Protein"});
+                tblMakro.add_row({"2", "Karbohidrat"});
+                tblMakro.add_row({"3", "Lemak"});
+
+                tblMakro[0].format().font_align(FontAlign::center).font_style({FontStyle::bold});
+
+                for (size_t i = 1; i <= 3; ++i) {
+                    tblMakro[i][0].format().font_align(FontAlign::center);
+                }
+                
+                cout << tblMakro << endl;
+                cout << "Pilihan: ";
                 string pilMakro; getline(cin, pilMakro);
                 
-                if (pilMakro == "a" || pilMakro == "A") {
-                    quickSortMakro(arr, 0, n - 1, 1); cout << "\n\033[1;32m>> Hasil Sorting Protein Tertinggi:\033[0m\n";
-                } else if (pilMakro == "b" || pilMakro == "B") {
-                    quickSortMakro(arr, 0, n - 1, 2); cout << "\n\033[1;32m>> Hasil Sorting Karbohidrat Tertinggi:\033[0m\n";
-                } else if (pilMakro == "c" || pilMakro == "C") {
-                    quickSortMakro(arr, 0, n - 1, 3); cout << "\n\033[1;32m>> Hasil Sorting Lemak Tertinggi:\033[0m\n";
+                if (pilMakro == "1") {
+                    quickSortMakro(arr, 0, n - 1, 1); 
+                    system("cls");
+                    cout << "\nHasil Sorting Protein Tertinggi\n";
+                } else if (pilMakro == "2") {
+                    quickSortMakro(arr, 0, n - 1, 2); 
+                    system("cls");
+                    cout << "\nHasil Sorting Karbohidrat Tertinggi\n";
+                } else if (pilMakro == "3") {
+                    quickSortMakro(arr, 0, n - 1, 3); 
+                    system("cls");
+                    cout << "\nHasil Sorting Lemak Tertinggi\n";
                 } else {
                     throw invalid_argument("Pilihan makronutrisi tidak valid.");
                 }
-                tabelMakanan(arr, n);
-            } else {
+                tabelMakananUser(arr, n);
+            } 
+            else {
                 throw invalid_argument("Pilihan tidak valid!");
             }
 
-            cout << "\nTekan enter untuk kembali ke menu sorting...";
+            cout << "\n\033[1;32mTekan enter untuk kembali ke menu sorting...\033[0m";
             cin.get();
 
-        } catch (const exception& e) {
+        } 
+        catch (const exception& e) {
             cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
-            cout << "Tekan enter untuk mencoba lagi...";
+            cout << "\033[1;32mTekan enter untuk mencoba lagi...\033[0m";
             cin.get();
         }
     }
@@ -204,31 +263,32 @@ inline void menuSearching(MYSQL* conn) {
     string pilihan;
     while (true) {
         system("cls");
-        cout << "\n====== SEARCHING MAKANAN (BINARY SEARCH) ======\n\n";
+        cout << "\n====== MENU SEARCHING ======\n\n";
         
         DataMakanan arr[100];
         int n = fetchMakananToArray(conn, arr, 100);
 
         Table searchTbl;
-        searchTbl.add_row({"No", "Metode Pencarian"});
+        searchTbl.add_row({"No", "Menu Searching"});
         searchTbl.add_row({"1", "Cari Berdasarkan Nama Makanan"});
         searchTbl.add_row({"2", "Cari Berdasarkan Jumlah Kalori"});
         searchTbl.add_row({"0", "Kembali ke Menu Sebelumnya"});
 
-        searchTbl[0].format().font_align(FontAlign::center).font_style({FontStyle::bold});
+        searchTbl[0].format().font_align(FontAlign::center);
         for (size_t i = 1; i <= 3; ++i) searchTbl[i][0].format().font_align(FontAlign::center);
 
         cout << searchTbl << endl;
         cout << "Pilih opsi pencarian: ";
         getline(cin, pilihan);
 
-        if (pilihan == "0") break;
+        if (pilihan == "0") 
+        break;
 
         try {
             if (n == 0) throw runtime_error("Tidak ada data untuk dicari.");
 
             if (pilihan == "1") {
-                cout << "\nMasukkan Nama Makanan (Perhatikan Huruf Besar/Kecil): ";
+                cout << "\nMasukkan Nama Makanan : ";
                 string key; getline(cin, key);
                 quickSortNama(arr, 0, n - 1); 
                 int index = binarySearchNama(arr, 0, n - 1, key);
@@ -236,7 +296,7 @@ inline void menuSearching(MYSQL* conn) {
                 if (index != -1) {
                     cout << "\n\033[1;32m[DATA DITEMUKAN]\033[0m\n";
                     DataMakanan hasil[1] = {arr[index]}; 
-                    tabelMakanan(hasil, 1);
+                    tabelMakananUser(hasil, 1);
                 } else { 
                     throw runtime_error("Makanan dengan nama '" + key + "' tidak ada di database."); 
                 }
@@ -248,7 +308,7 @@ inline void menuSearching(MYSQL* conn) {
                 try {
                     keyKalori = stof(strKalori);
                 } catch (...) {
-                    throw invalid_argument("Input harus berupa angka!");
+                    throw invalid_argument("Input harus berupa angka untuk kalori");
                 }
 
                 quickSortKalori(arr, 0, n - 1);
@@ -257,20 +317,20 @@ inline void menuSearching(MYSQL* conn) {
                 if (index != -1) {
                     cout << "\n\033[1;32m[DATA DITEMUKAN]\033[0m\n";
                     DataMakanan hasil[1] = {arr[index]}; 
-                    tabelMakanan(hasil, 1);
+                    tabelMakananUser(hasil, 1);
                 } else { 
                     throw runtime_error("Makanan dengan kalori " + formatFloat(keyKalori) + " kcal tidak ada."); 
                 }
             } else { 
-                throw invalid_argument("Pilihan tidak valid!"); 
+                throw invalid_argument("Pilihan tidak valid"); 
             }
 
-            cout << "\nTekan enter untuk kembali ke menu searching...";
+            cout << "\n\033[1;32mTekan enter untuk kembali ke menu searching...\033[0m";
             cin.get();
 
         } catch (const exception& e) {
             cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
-            cout << "Tekan enter untuk mencoba lagi...";
+            cout << "\033[1;32mTekan enter untuk mencoba lagi...\033[0m";
             cin.get();
         }
     }
@@ -291,7 +351,7 @@ inline void menuUser(MYSQL* conn) {
         userMenu.add_row({"5", "Sorting Makanan"}); 
         userMenu.add_row({"6", "Searching Makanan"});
         userMenu.add_row({"0", "Kembali ke menu sebelumnya"});
-        userMenu[0].format().font_align(FontAlign::center).font_style({FontStyle::bold});
+        userMenu[0].format().font_align(FontAlign::center);
         for (size_t i = 1; i <= 7; ++i) userMenu[i][0].format().font_align(FontAlign::center);
         
         cout << userMenu << "\nSilakan pilih menu yang tersedia : ";
