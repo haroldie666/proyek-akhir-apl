@@ -38,8 +38,19 @@ CREATE TABLE manajemen_rekomendasi (
     saran_diet VARCHAR(255) NOT NULL
 );
 
-insert into users values (1, 'fina', '016', 'admin'), (2, 'komang', '003', 'admin'), (3, 'zaki', '020', 'admin'), (4, 'senku', '1234', 'user');
-insert into makanan values (1, 'Nasi putih', 'Makanan utama', 130, 2.7, 28.2, 0.3), (2, 'Ayam goreng', 'Lauk pauk', 260, 27.3, 1.8, 16.8), (3, 'Sate ayam', 'Lauk pauk', 200, 20, 15, 10), (4, 'Rendang daging', 'Lauk pauk', 468, 47, 10.5, 30), (5, 'Pisang rebus', 'Cemilan', 110, 1.2, 28, 0.3); 
+insert into users values 
+(1, 'fina', '016', 'admin'), 
+(2, 'komang', '003', 'admin'), 
+(3, 'zaki', '020', 'admin'), 
+(4, 'senku', '1234', 'user');
+
+insert into makanan values 
+(1, 'Nasi putih', 'Makanan utama', 130, 2.7, 28.2, 0.3), 
+(2, 'Ayam goreng', 'Lauk pauk', 260, 27.3, 1.8, 16.8), 
+(3, 'Sate ayam', 'Lauk pauk', 200, 20, 15, 10), 
+(4, 'Rendang daging', 'Lauk pauk', 468, 47, 10.5, 30), 
+(5, 'Pisang rebus', 'Cemilan', 110, 1.2, 28, 0.3); 
+
 INSERT INTO manajemen_rekomendasi (kategori_bmi, saran_diet) VALUES
 ('Kekurangan Berat Badan (Underweight)', 'Tingkatkan asupan kalori harian secara bertahap. Konsumsi makanan padat gizi tinggi protein dan karbohidrat kompleks seperti daging sapi, telur, kacang-kacangan, dan susu.'),
 ('Normal (Ideal)', 'Pertahankan pola makan Anda saat ini! Pastikan gizi tetap seimbang dengan porsi sayur, buah, dan protein yang cukup setiap harinya.'),
@@ -48,8 +59,8 @@ INSERT INTO manajemen_rekomendasi (kategori_bmi, saran_diet) VALUES
 
 INSERT INTO request_user (id_user, nama_makanan_req, status_request) VALUES
 (4, 'Gulai Kambing', 'Pending'),
-(2, 'Salad Buah Yogurt', 'Diterima'),
-(2, 'Seblak Mercon Level 5', 'Ditolak'),
+(2, 'Salad Buah Yogurt', 'Pending'),
+(2, 'Seblak Mercon Level 5', 'Pending'),
 (4, 'Oatmeal Susu Pisang', 'Pending');
 
 INSERT INTO log_user (id_user, aktivitas) VALUES 
@@ -60,6 +71,3 @@ INSERT INTO log_user (id_user, aktivitas) VALUES
 (1, 'Login ke dalam sistem (Admin)'),
 (1, 'Admin menolak request makanan: Seblak Mercon Level 5'),
 (2, 'Admin menambahkan data makanan baru ke katalog gizi');
-
-select * from users;
-select * from makanan;

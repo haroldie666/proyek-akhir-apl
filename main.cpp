@@ -57,8 +57,11 @@ void katalogDiet() {
             infoDiet.add_row({"Manfaat", "- Memperbaiki sensitivitas insulin.\n- Membantu regenerasi sel (Autofagi).\n- Efektif menurunkan berat badan."});
 
             infoDiet[0].format().font_align(FontAlign::center);
+            infoDiet[0][0].format().font_color(Color::yellow);
+            infoDiet[0][1].format().font_color(Color::yellow);
+
             for(size_t i = 1; i <= 4; ++i) {
-                infoDiet[i][0].format().font_align(FontAlign::center);
+                infoDiet[i][0].format().font_align(FontAlign::center).font_color(Color::cyan);
             }
             
             cout << infoDiet << endl;
@@ -77,8 +80,11 @@ void katalogDiet() {
             infoDiet.add_row({"Manfaat", "- Menurunkan risiko penyakit kardiovaskular.\n- Tubuh lebih ringan dan definisi otot lebih tajam."});
 
             infoDiet[0].format().font_align(FontAlign::center);
+            infoDiet[0][0].format().font_color(Color::yellow);
+            infoDiet[0][1].format().font_color(Color::yellow);
+            
             for(size_t i = 1; i <= 4; ++i) {
-                infoDiet[i][0].format().font_align(FontAlign::center);
+                infoDiet[i][0].format().font_align(FontAlign::center).font_color(Color::cyan);
             }
 
             cout << infoDiet << endl;
@@ -97,8 +103,11 @@ void katalogDiet() {
             infoDiet.add_row({"Manfaat", "- Meningkatkan kekuatan fisik dan daya tahan tulang.\n- Memperbaiki BMR (metabolisme pembakaran kalori)."});
 
             infoDiet[0].format().font_align(FontAlign::center);
+            infoDiet[0][0].format().font_color(Color::yellow);
+            infoDiet[0][1].format().font_color(Color::yellow);
+
             for(size_t i = 1; i <= 4; ++i) {
-                infoDiet[i][0].format().font_align(FontAlign::center);
+                infoDiet[i][0].format().font_align(FontAlign::center).font_color(Color::cyan);
             }
 
             cout << infoDiet << endl;
@@ -112,14 +121,18 @@ void katalogDiet() {
             Table infoDiet;
             infoDiet.add_row({"Aspek", "Keterangan"});
             infoDiet.add_row({"Pengertian", "Diet sangat rendah karbohidrat dan tinggi lemak\nuntuk mengubah sumber energi utama tubuh ke lemak."});
-            infoDiet.add_row({"Aturan Makan", "- Target: 70% Lemak, 20-25% Protein, 5% Karbohidrat.\n- Karbohidrat dibatasi maksimal 20-50 gram/hari.\n- Memancing fase 'Ketosis' dalam tubuh."});
-            infoDiet.add_row({"Contoh Menu", "- Sarapan: Telur orak-arik dimasak dengan mentega.\n- Makan siang: Salmon panggang, alpukat, dan keju.\n- Makan malam: Daging iga berlemak & sayur hijau."});
-            infoDiet.add_row({"Manfaat", "- Sangat cepat untuk menurunkan berat badan.\n- Menstabilkan kadar gula darah dan insulin."});
+            infoDiet.add_row({"Aturan Makan", "Target: 70% Lemak, 20-25% Protein, 5% Karbohidrat.\nKarbohidrat dibatasi maksimal 20-50 gram/hari.\nMemancing fase 'Ketosis' dalam tubuh."});
+            infoDiet.add_row({"Contoh Menu", "Sarapan: Telur orak-arik dimasak dengan mentega.\nMakan siang: Salmon panggang, alpukat, dan keju.\nMakan malam: Daging iga berlemak & sayur hijau."});
+            infoDiet.add_row({"Manfaat", "Sangat cepat untuk menurunkan berat badan.\nMenstabilkan kadar gula darah dan insulin."});
 
             infoDiet[0].format().font_align(FontAlign::center);
+            infoDiet[0][0].format().font_color(Color::yellow);
+            infoDiet[0][1].format().font_color(Color::yellow);
+            
             for(size_t i = 1; i <= 4; ++i) {
-                infoDiet[i][0].format().font_align(FontAlign::center);
+                infoDiet[i][0].format().font_align(FontAlign::center).font_color(Color::cyan);
             }
+
             cout << infoDiet << endl;
             cout << "\n\033[1;32mTekan enter untuk kembali...\033[0m";
             cin.get();
@@ -128,7 +141,7 @@ void katalogDiet() {
             break; 
         } 
         else {
-            cout << "Pilihan tidak valid" << endl;
+            cout << "\n\033[1;31mPilihan tidak valid, silakan masukkan angka saja\033[0m" << endl;
             cout << "\033[1;32mTekan enter untuk kembali...\033[0m";
             cin.get();
         }
@@ -158,7 +171,7 @@ int main() {
             cout << "\n========= SELAMAT DATANG DI SIGIZI =========\n\n";
 
             Table mainMenu;
-            mainMenu.add_row({"No", "   Menu Utama"});
+            mainMenu.add_row({"No", "Menu Utama"});
             mainMenu.add_row({"1", "Login"});
             mainMenu.add_row({"2", "Register"});
             mainMenu.add_row({"3", "Katalog Diet"});
@@ -184,7 +197,7 @@ int main() {
                 cout << "Terima kasih telah menggunakan program kami" << endl;
                 break;
             } else {
-                cout << "Pilihan tidak valid" << endl;
+                cout << "\n\033[1;31mPilihan tidak valid, silakan masukkan angka saja\033[0m" << endl;
                 cout << "\033[1;32mSilakan tekan enter untuk memilih kembali...\033[0m" << endl;
                 cin.get();
             }

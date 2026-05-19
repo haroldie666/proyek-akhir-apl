@@ -5,6 +5,7 @@
 #include <mysql.h>
 #include <conio.h>
 #include <string>
+#include "helper.h"
 
 using namespace std;
 
@@ -74,7 +75,7 @@ void registerUser(MYSQL* conn) {
     if (mysql_query(conn, insertQuery.c_str())) {
         cout << "\nGagal registrasi " << mysql_error(conn) << endl;
     } else {
-        cout << "\nRegistrasi berhasil, akun Anda sudah terdaftar sebagai user. Silakan login untuk melanjutkan" << endl;
+        cout << "\n\033[34mRegistrasi berhasil, akun Anda sudah terdaftar sebagai user. Silakan login untuk melanjutkan\033[0m" << endl;
     }
     cout << "\033[1;32mTekan enter untuk kembali...\033[0m";
     cin.get();
@@ -92,6 +93,7 @@ bool login(MYSQL* conn, int percobaan) {
     string query = "SELECT * FROM users WHERE username = '" + usn + "' AND password = '" + pass + "'";
     
     mysql_query(conn, query.c_str());
+
     MYSQL_RES* res = mysql_store_result(conn);
     
     if (mysql_num_rows(res) > 0) {
@@ -102,9 +104,7 @@ bool login(MYSQL* conn, int percobaan) {
         isTerdaftar = true;
         userRole = row[3] ? row[3] : "user"; 
 
-        cout << "\nLogin berhasil, selamat datang di Sistem Gizi " << user << endl;
-        mysql_free_result(res);
-        
+        cout << "\n\033[34mLogin berhasil, selamat datang di Sistem Gizi \033[0m" << user << endl;
         cout << "\033[1;32mTekan enter untuk melanjutkan...\033[0m";
         cin.get();
         return true;
@@ -113,7 +113,7 @@ bool login(MYSQL* conn, int percobaan) {
     mysql_free_result(res);
 
     if (percobaan - 1 == 0) {
-        cout << "\nMaaf, kesempatan Anda telah habis" << endl;
+        cout << "\n\033[31mMaaf, kesempatan Anda telah habis\033[0m" << endl;
         cout << "Anda akan otomatis dialihkan ke form Registrasi." << endl;
         cout << "\033[1;32mTekan enter untuk melanjutkan...\033[0m";
         cin.get();
@@ -121,7 +121,7 @@ bool login(MYSQL* conn, int percobaan) {
 
         return false;
     } 
-    cout << "\nSayang sekali, login gagal" << endl;
+    cout << "\n\033[31mSayang sekali, login gagal\033[0m" << endl;
     cout << "Sisa percobaan Anda adalah: " << percobaan - 1;
     cout << "\n\033[1;32mTekan enter untuk mencoba lagi...\033[0m";
     cin.get();

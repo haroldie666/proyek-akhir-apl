@@ -10,8 +10,8 @@
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-I", "C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\include",
-                "-L", "C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\lib",
+                "-I", "D:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\include",
+                "-L", "D:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\lib",
                 "-lmysql"
             ],
 			"options": {
