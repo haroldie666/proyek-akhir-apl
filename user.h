@@ -357,7 +357,15 @@ inline void menuUser(MYSQL* conn) {
         cout << userMenu << "\nSilakan pilih menu yang tersedia : ";
         
         getline(cin, pilihan);
-        if(pilihan.empty()) continue;
+
+        // --- PERUBAHAN LOGIKA ERROR HANDLING DI SINI ---
+        if (pilihan.empty()) {
+            cout << "\n\033[1;31m[ERROR] Input tidak boleh kosong!\033[0m\n";
+            cout << "Silakan tekan enter untuk memilih kembali...";
+            cin.get();
+            continue; 
+        }
+        // -----------------------------------------------
 
         if (pilihan == "1") { 
             readKatalogGizi(conn); 
@@ -392,8 +400,9 @@ inline void menuUser(MYSQL* conn) {
             cout << "\n\033[1;32mTekan enter untuk melanjutkan...\033[0m"; 
             cin.get(); 
             break;
-        } else { 
-            cout << "\033[1;33mPilihan tidak valid, silakan tekan enter...\033[0m"; 
+        } else {
+            cout << "\n\033[1;33m[PERINGATAN] Pilihan '" << pilihan << "' tidak valid!\033[0m\n"; 
+            cout << "Silakan tekan enter untuk mencoba lagi...";
             cin.get(); 
         }
     }

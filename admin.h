@@ -998,15 +998,22 @@ inline void menuAdmin(MYSQL* conn) {
         adminMenu.add_row({"8", "Menu searching"});
         adminMenu.add_row({"9", "Manajemen rekomendasi diet"}); 
         adminMenu.add_row({"0", "Kembali ke menu sebelumnya"});
-        adminMenu[0].format().font_align(FontAlign::center);
+        adminMenu[0].format().font_align(FontAlign::center).font_style({FontStyle::bold});
 
         for (size_t i = 1; i <= 10; ++i) adminMenu[i][0].format().font_align(FontAlign::center);
         cout << adminMenu << endl;
         
         cout << "Silakan pilih menu admin: ";
         getline(cin, pilihan);
-        if(pilihan.empty()) 
-        continue; 
+
+        // --- REVISI ERROR HANDLING INPUT KOSONG ---
+        if(pilihan.empty()) {
+            cout << "\n\033[1;31m[ERROR] Input tidak boleh kosong!\033[0m\n";
+            cout << "Silakan tekan enter untuk memilih kembali...";
+            cin.get();
+            continue; 
+        }
+        // ------------------------------------------
 
         if (pilihan == "1") { 
             readData(conn); 
