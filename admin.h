@@ -52,7 +52,7 @@ inline void createData(MYSQL* conn) {
             }
             break; 
         } catch (const invalid_argument& e) {
-            cout << "[ERROR] " << e.what() << "\nSilakan isi kembali.\n\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\nSilakan isi kembali.\n\n";
         }
     }
 
@@ -92,7 +92,7 @@ inline void createData(MYSQL* conn) {
                 throw invalid_argument("Pilihan kategori tidak valid. Pilih harus angka 1-5.");
             }
         } catch (const invalid_argument& e) {
-            cout << "[ERROR] " << e.what() << "\nSilakan isi kembali.\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\nSilakan isi kembali.\n\033[0m\n";
         }
     }
 
@@ -112,10 +112,10 @@ inline void createData(MYSQL* conn) {
                 
             } catch (const invalid_argument& e) {
                 string msg = e.what();
-                if (msg == "stof") cout << "[ERROR] Input tidak valid. Harus berupa angka.\n\n";
-                else cout << "[ERROR] " << msg << "\n\n";
+                if (msg == "stof") cout << "\033[1;31m[ERROR] Input tidak valid. Harus berupa angka.\033[0m\n\n";
+                else cout << "\033[1;31m[ERROR] " << msg << "\033[0m\n\n";
             } catch (...) {
-                cout << "[ERROR] Input tidak valid atau angka terlalu besar\n\n";
+                cout << "\033[1;31m[ERROR] Input tidak valid atau angka terlalu besar\033[0m\n\n";
             }
         }
     };
@@ -142,6 +142,7 @@ inline void editData(MYSQL* conn) {
     readData(conn);
     string targetId;
     string oldNama, oldKategori, oldKalori, oldProtein, oldKarbo, oldLemak;
+    string namaBaru, kategoriBaru, kaloriBaru, proteinBaru, karboBaru, lemakBaru;
 
     while (true) {
         try {
@@ -178,9 +179,9 @@ inline void editData(MYSQL* conn) {
             break; 
             
         } catch (const invalid_argument& e) {
-            cout << "[ERROR] " << e.what() << "\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
         } catch (...) {
-            cout << "[ERROR] Terjadi kesalahan saat membaca ID.\n";
+            cout << "\033[1;31m[ERROR] Terjadi kesalahan saat membaca ID.\033[0m\n";
         }
     }
     
@@ -193,13 +194,13 @@ inline void editData(MYSQL* conn) {
             }
             break;
         } catch (const invalid_argument& e) {
-            cout << "[ERROR] " << e.what() << "\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
         }
     }
 
     while (true) {
         try {
-            cout << "\nUbah Kategori Makanan [" << oldKategori << "]:\n";
+            cout << "Ubah Kategori Makanan [" << oldKategori << "]:\n";
             
             Table tabelKategori;
             tabelKategori.add_row({"No", "Kategori Makanan"});
@@ -237,14 +238,13 @@ inline void editData(MYSQL* conn) {
                 throw invalid_argument("Pilihan kategori tidak valid! Masukkan angka 1-5 atau kosongkan.");
             }
         } catch (const invalid_argument& e) {
-            cout << "\n[ERROR] " << e.what() << "\n";
+            cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
         }
     }
 
     auto editFloatOpsional = [](const string& prompt, const string& oldVal, string& varRef) {
         while (true) {
             try {
-                cout << prompt;
                 cout << prompt << " [" << oldVal << "] : ";
                 getline(cin, varRef);
                 
@@ -257,16 +257,16 @@ inline void editData(MYSQL* conn) {
                 break; 
                 
             } catch (...) {
-                cout << "[ERROR] Input harus berupa angka! Silakan isi kembali.\n";
+                cout << "\033[1;31m[ERROR] Input harus berupa angka! Silakan isi kembali.\033[0m\n";
             }
         }
     };
 
     cout << endl;
-    editFloatOpsional("Kalori baru", oldKalori, kaloriBaru);
-    editFloatOpsional("Protein baru (g)", oldProtein, proteinBaru);
-    editFloatOpsional("Karbohidrat baru (g)", oldKarbo, karboBaru);
-    editFloatOpsional("Lemak baru (g)", oldLemak, lemakBaru);
+    editFloatOpsional("Kalori", oldKalori, kaloriBaru);
+    editFloatOpsional("Protein (g)", oldProtein, proteinBaru);
+    editFloatOpsional("Karbohidrat (g)", oldKarbo, karboBaru);
+    editFloatOpsional("Lemak (g)", oldLemak, lemakBaru);
 
     string updateQuery = "UPDATE makanan SET "; bool isUpdate = false;
     if (!namaBaru.empty()) { updateQuery += "nama_makanan = '" + namaBaru + "'"; isUpdate = true; }
@@ -289,7 +289,7 @@ inline void editData(MYSQL* conn) {
             catatLog(conn, currentUserId, "Mengubah data makanan dengan ID: " + targetId);
         }
     } else { 
-        cout << "\nTidak ada data yang diubah." << endl; 
+        cout << "\nTidak ada data yang diubah" << endl; 
     }
 }
 
@@ -325,7 +325,7 @@ inline void konfirmasiRequest(MYSQL* conn) {
 
     Table tbl; 
     tbl.add_row({"ID Request", "ID User", "Username", "Nama Makanan", "Status"});
-    for (size_t i = 0; i < 5; ++i) tbl[0][i].format().font_align(FontAlign::center).font_style({FontStyle::bold});
+    for (size_t i = 0; i < 5; ++i) tbl[0][i].format().font_align(FontAlign::center);
 
     MYSQL_ROW row;
     while ((row = mysql_fetch_row(res))) {
@@ -336,6 +336,8 @@ inline void konfirmasiRequest(MYSQL* conn) {
         tbl[i][0].format().font_align(FontAlign::center);
         tbl[i][1].format().font_align(FontAlign::center);
         tbl[i][4].format().font_align(FontAlign::center);
+
+        tbl[i][4].format().font_align(FontAlign::center).font_color(Color::blue);
     }
     cout << tbl << "\n"; 
     mysql_free_result(res);
@@ -347,11 +349,12 @@ inline void konfirmasiRequest(MYSQL* conn) {
             cout << "Masukkan ID Request (0 = batal): "; 
             getline(cin, idReq);
             
-            if (idReq == "0") return; 
-            if (idReq.empty()) throw invalid_argument("ID Request tidak boleh kosong!");
+            if (idReq == "0") 
+            return; 
+            if (idReq.empty()) throw invalid_argument("ID Request tidak boleh kosong");
 
             if (idReq.find_first_not_of("0123456789") != string::npos) {
-                throw invalid_argument("ID Request harus berupa angka murni!");
+                throw invalid_argument("ID Request harus berupa angka");
             }
 
             string qNama = "SELECT nama_makanan_req FROM request_user WHERE id_request = " + idReq + " AND status_request = 'Pending'";
@@ -375,7 +378,8 @@ inline void konfirmasiRequest(MYSQL* conn) {
 
     while (true) {
         try {
-            cout << "\n1. Terima | 2. Tolak \nPilihan: "; 
+            cout << "\n\033[1;33m1. Terima\033[0m | \033[1;31m2. Tolak\033[0m" << endl;
+            cout << "Pilihan: ";
             getline(cin, aksi);
             
             if (aksi == "1" || aksi == "2") {
@@ -439,7 +443,7 @@ inline void konfirmasiRequest(MYSQL* conn) {
             }
         };
 
-        kalori = inputFloat("Jumlah Kalori : ");
+        kalori = inputFloat("Jumlah Kalori (kcal) : ");
         protein = inputFloat("Jumlah Protein (g) : ");
         karbohidrat = inputFloat("Jumlah Karbohidrat (g) : ");
         lemak = inputFloat("Jumlah Lemak (g) : ");
@@ -473,7 +477,7 @@ inline void readLog(MYSQL* conn) {
     mysql_query(conn, "SELECT id_log, id_user, aktivitas, waktu FROM log_user ORDER BY waktu DESC");
     MYSQL_RES* res = mysql_store_result(conn);
     if (mysql_num_rows(res) == 0) { 
-        cout << "Belum ada riwayat.\n"; 
+        cout << "Belum ada riwayat\n"; 
         mysql_free_result(res); 
         return; }
 
@@ -615,7 +619,6 @@ inline void searchingMenu(MYSQL* conn) {
             cout << "Pilih opsi: ";
             getline(cin, sub);
 
-            // Validasi Input
             if (sub.empty()) throw invalid_argument("Input tidak boleh kosong!");
             if (sub.find_first_not_of("0123456789") != string::npos) throw invalid_argument("Input harus berupa angka!");
             if (sub != "0" && sub != "1" && sub != "2" && sub != "3") {
@@ -640,7 +643,6 @@ inline void searchingMenu(MYSQL* conn) {
 
                     int index = binarySearchNama(arr, 0, n - 1, toLower(cari));
 
-                    system("cls");
                     if (index != -1) {
 
                         DataMakanan hasil[1] = {arr[index]};
@@ -657,33 +659,45 @@ inline void searchingMenu(MYSQL* conn) {
                 string cari; 
                 getline(cin, cari);
 
-                string q = "SELECT id, username, role FROM users WHERE LOWER(username) = LOWER('" + cari + "')";
-                mysql_query(conn, q.c_str()); 
-                MYSQL_RES* res = mysql_store_result(conn);
+                string q = "SELECT id, username, role "
+                           "FROM users "
+                            "WHERE LOWER(username) LIKE LOWER('%" + cari + "%')";
+
+                if (mysql_query(conn, q.c_str())) {
+                    cout << "\033[1;31m[ERROR] Gagal mengeksekusi query: \033[0m" << mysql_error(conn) << "\n";
+                } else {
+                    MYSQL_RES* res = mysql_store_result(conn);
                 
-                if (mysql_num_rows(res) > 0) {
+                if (res != NULL) {
+                        if (mysql_num_rows(res) > 0) {
+                            Table tblAkun;
+                            system("cls");
+                            cout << "\n====== Hasil Pencarian Akun ======\n\n";
+                            tblAkun.add_row({"ID Akun", "Username", "Role"});
 
-                    system("cls");
-                    Table tblAkun;
-                    tblAkun.add_row({"ID Akun", "Username", "Role"});
+                            tblAkun[0].format().font_align(FontAlign::center);
 
-                    tblAkun[0].format().font_align(FontAlign::center);
+                            MYSQL_ROW row;
+                            while ((row = mysql_fetch_row(res))) {
+                                tblAkun.add_row({row[0], row[1], row[2]});
+                            }
 
-                    MYSQL_ROW row;
-                    while ((row = mysql_fetch_row(res))) {
-                        tblAkun.add_row({row[0], row[1], row[2]});
+                            for (size_t i = 1; i <= mysql_num_rows(res); ++i) {
+                                tblAkun[i][0].format().font_align(FontAlign::center);
+                            }
+
+                            cout << tblAkun << endl;
+                        } else { 
+                            cout << "\nAkun dengan nama '" << cari << "' tidak ditemukan.\n"; 
+                        }
+                        
+                        // Selalu bebaskan memori setelah selesai digunakan
+                        mysql_free_result(res);
+                    } else {
+                        cout << "\033[1;31m[ERROR] Gagal mengambil hasil data dari database.\033[0m\n";
                     }
-
-                    for (size_t i = 1; i <= mysql_num_rows(res); ++i) {
-                        tblAkun[i][0].format().font_align(FontAlign::center);
-                    }
-
-                    cout << tblAkun << endl;
-                } else { 
-                    cout << "\nAkun dengan nama '" << cari << "' tidak ditemukan.\n"; 
                 }
                 
-                mysql_free_result(res);
                 cout << "\n\033[1;32mTekan enter untuk kembali ke menu searching...\033[0m";
                 cin.get();
             } 
@@ -692,27 +706,37 @@ inline void searchingMenu(MYSQL* conn) {
                 string cari; 
                 getline(cin, cari);
             
-                string q = "SELECT id_user, username, aktivitas FROM log_user WHERE LOWER(aktivitas) LIKE LOWER('%" + cari + "%')";
-                mysql_query(conn, q.c_str()); 
-                MYSQL_RES* res = mysql_store_result(conn);
-                
-                if (mysql_num_rows(res) > 0) {
-                    Table tbl; 
-                    system("cls");
-                    tbl.add_row({"ID User", "Username", "Aktivitas"}); 
-                    MYSQL_ROW row;
-                    while((row = mysql_fetch_row(res))) {
-                        tbl.add_row({row[0], row[1], row[2]});
-                    }
-                    cout << "\n" << tbl << endl;
-                } else { 
-                    cout << "Log tidak ditemukan.\n"; 
+                string q = "SELECT l.id_user, u.username, l.aktivitas "
+               "FROM log_user l "
+               "JOIN users u ON l.id_user = u.id "
+               "WHERE LOWER(l.aktivitas) LIKE LOWER('%" + cari + "%')";
+
+                if (mysql_query(conn, q.c_str())) {
+        cout << "\033[1;31m[ERROR] Gagal mengeksekusi query: \033[0m" << mysql_error(conn) << "\n";
+    } else {
+        MYSQL_RES* res = mysql_store_result(conn);
+        
+        if (res != NULL) { 
+            if (mysql_num_rows(res) > 0) {
+                Table tbl; 
+                tbl.add_row({"ID User", "Username", "Aktivitas"}); 
+                MYSQL_ROW row;
+                while((row = mysql_fetch_row(res))) {
+                    tbl.add_row({row[0], row[1], row[2]});
                 }
-                
-                mysql_free_result(res);
-                cout << "\n\033[1;32mTekan enter untuk kembali ke menu searching...\033[0m";
-                cin.get();
+                cout << "\n" << tbl << endl;
+            } else { 
+                cout << "Log tidak ditemukan.\n"; 
             }
+            mysql_free_result(res);
+        } else {
+            cout << "\033[1;31m[ERROR] Gagal mengambil data hasil query.\033[0m\n";
+        }
+    }
+    
+    cout << "\n\033[1;32mTekan enter untuk kembali ke menu searching...\033[0m";
+    cin.get();
+}
 
         } catch (const invalid_argument& e) {
             cout << "\033[1;31m[ERROR] " << e.what() << "\nTekan enter untuk mengulang...\033[0m";
@@ -787,7 +811,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         }
                         break; 
                     } catch (const invalid_argument& e) {
-                        cout << "[ERROR] " << e.what() << "\n";
+                        cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
                     }
                 }
 
@@ -799,15 +823,15 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         if (saran.empty()) throw invalid_argument("Saran diet tidak boleh kosong!");
                         break;
                     } catch (const invalid_argument& e) {
-                        cout << "[ERROR] " << e.what() << "\n";
+                        cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
                     }
                 }
 
                 string qInsert = "INSERT INTO manajemen_rekomendasi (kategori_bmi, saran_diet) VALUES ('" + 
                                  kategori + "', '" + saran + "')";
                 
-                if (mysql_query(conn, qInsert.c_str())) cout << "Gagal: " << mysql_error(conn) << endl;
-                else cout << "\n[BERHASIL] Rekomendasi baru ditambahkan.\n";
+                if (mysql_query(conn, qInsert.c_str())) cout << "\033[1;31mGagal: " << mysql_error(conn) << "\033[0m" << endl;
+                else cout << "\n\033[1;32m[BERHASIL] Rekomendasi baru ditambahkan.\033[0m\n";
                 
                 cout << "\033[1;32mTekan enter untuk kembali...\033[0m";
                 cin.get();
@@ -845,7 +869,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         mysql_free_result(cekRes);
                         break;
                     } catch (const invalid_argument& e) {
-                        cout << "[ERROR] " << e.what() << "\n";
+                        cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
                     }
                 }
 
@@ -864,7 +888,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         }
                         break;
                     } catch (const invalid_argument& e) {
-                        cout << "[ERROR] " << e.what() << "\n";
+                        cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
                     }
                 }
 
@@ -874,7 +898,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         getline(cin, saranBaru);
                         break; 
                     } catch (const invalid_argument& e) {
-                        cout << "[ERROR] " << e.what() << "\n";
+                        cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
                     }
                 }
 
@@ -892,8 +916,8 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
 
                 if (isUpdate) {
                     qUpdate += " WHERE id_rekomendasi = " + id;
-                    if (mysql_query(conn, qUpdate.c_str())) cout << "Gagal: " << mysql_error(conn) << endl;
-                    else cout << "\n[BERHASIL] Data telah diupdate.\n";
+                    if (mysql_query(conn, qUpdate.c_str())) cout << "\033[1;31mGagal: " << mysql_error(conn) << "\033[0m" << endl;
+                    else cout << "\n\033[1;32m[BERHASIL] Data telah diupdate.\033[0m\n";
                 } else {
                     cout << "\nTidak ada data yang diubah.\n";
                 }
@@ -933,16 +957,16 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
                         mysql_free_result(cekRes);
                         break;
                     } catch (const invalid_argument& e) {
-                        cout << "[ERROR] " << e.what() << "\n";
+                        cout << "\033[1;31m[ERROR] " << e.what() << "\033[0m\n";
                     }
                 }
 
                 if (id == "0") continue;
 
                 string qDelete = "DELETE FROM manajemen_rekomendasi WHERE id_rekomendasi = " + id;
-                if (mysql_query(conn, qDelete.c_str())) cout << "Gagal: " << mysql_error(conn) << endl;
-                else cout << "\n[BERHASIL] Data dihapus.\n";
-                
+                if (mysql_query(conn, qDelete.c_str())) cout << "\033[1;31mGagal: " << mysql_error(conn) << "\033[0m" << endl;
+                else cout << "\n\033[1;32m[BERHASIL] Data dihapus.\033[0m\n";
+
                 cout << "\033[1;32mTekan enter untuk kembali...\033[0m";
                 cin.get();
 
@@ -951,7 +975,7 @@ inline void manajemen_rekomendasi(MYSQL* conn) {
             }
 
         } catch (const invalid_argument& e) {
-            cout << "\033[1;31m\n[ERROR] " << e.what() << "\nTekan enter untuk mengulang...\033[0m";
+            cout << "\033[1;31m\n[ERROR] " << e.what() << "\033[0m\nTekan enter untuk mengulang...\033[0m";
             cin.get();
         }
     }
@@ -1027,7 +1051,7 @@ inline void menuAdmin(MYSQL* conn) {
             cout << "\n\033[1;32mTekan enter untuk melanjutkan...\033[0m"; 
             cin.get(); 
             break;} 
-        else { cout << "\033[1;33\nPilihan tidak valid. Silakan tekan enter...\033[0m"; 
+        else { cout << "\033[1;33m\nPilihan tidak valid. Silakan tekan enter...\033[0m"; 
             cin.get(); }
     }
 }
